@@ -56,7 +56,7 @@ Ventajas:
 
 ## Flujo de análisis profesional con `curl`
 
-![Flujo de análisis con curl](Practica-Colaborativa/img/flujo-analisis-curl.png)
+![Flujo de análisis con curl](/img/flujo-analisis-curl.png)
 
 > Diagrama vertical/horizontal (según tu exportación) que muestra el pipeline de un análisis con `curl`: recolección, peticiones iniciales, enumeración HTTP, login y sesión, manipulación de cookies, pruebas LFI/SSRF, enumeración de servicios internos y reporte final.
 
