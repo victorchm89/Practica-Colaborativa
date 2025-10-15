@@ -1,67 +1,50 @@
-# Arsenal de un Analista – Uso Profesional de Burp Suite
+# Arsenal de un Analista: Uso Profesional de `curl`
 
-Este proyecto documenta el uso profesional y real de **Burp Suite** como herramienta principal en el análisis y explotación de vulnerabilidades web.
-
-Incluye flujos de trabajo, cheatsheets, capturas reales y ejemplos prácticos. Está orientado a servir como documentación interna de un equipo de análisis o como portfolio profesional.
+Este recurso técnico muestra cómo usar `curl` de forma avanzada para analizar, automatizar y explotar vulnerabilidades web desde terminal. Se incluyen casos reales, comandos útiles y un flujo de trabajo profesional orientado a analistas ofensivos.
 
 ---
 
-## Estructura del recurso
+## Contenido
 
-- `cheatsheets/` → Guía avanzada de uso de Burp Suite.
-- `ejemplos/` → Casos reales (XSS, IDOR, errores backend).
-- `img/` → Capturas de pantalla reales de análisis.
-- `flujo/` → Diagrama visual de análisis con Burp.
-
----
-
-## Casos reales incluidos
-
-- Análisis de flujo de registro vulnerable
-- Explotación de IDOR en perfiles
-- Evaluación del backend con errores en subida de ficheros
-
-🔗 [Ver los casos prácticos](ejemplos/burp-xss-idor.md)
+- Cheatsheet avanzada de uso de `curl` → `cheatsheets/curl-cheatsheet-avanzado.md`
+- Casos reales documentados → `ejemplos/casos-practicos-con-curl.md`
+- Capturas de pantalla con resultados reales → `img/`
+- Diagrama de flujo de uso profesional de `curl` → `flujo/`
 
 ---
 
-## Cheatsheet de Burp Suite
+## ¿Por qué `curl`?
 
-Una guía técnica y ofensiva con funcionalidades avanzadas para uso real.
-
-🔗 [Accede a la cheatsheet](cheatsheets/burp-suite-avanzado.md)
+- Herramienta clave en pentesting real
+- Permite testear XSS, IDOR, CSRF, inyecciones, bypasses
+- 100% compatible con scripts y automatización
+- No depende de GUI: ideal para entornos headless
 
 ---
 
-## Diagrama de flujo del análisis
+## Flujo profesional de análisis con `curl`
 
 ```plaintext
-+-------------------------+
-|  Enumeración inicial    |
-+-----------+-------------+
-            |
-        +---v---+
-        | Proxy |
-        +---+---+
-            |
-    +-------v--------+
-    | Scope Filtering |
-    +-------+--------+
-            |
-        +---v----+
-        |Repeater|
-        +---+----+
-            |
-        +---v----+
-        |Intruder|
-        +---+----+
-            |
-        +---v----+
-        |Comparer|
-        +---+----+
-            |
-        +---v-------------------+
-        | Extensiones (Autorize |
-        | Logger++, Hackvertor) |
-        +-----------------------+
-
++----------------------+
+|  Recolección inicial |
++----------------------+
+          ↓
++----------------------+
+|  Petición GET simple |
++----------------------+
+          ↓
++----------------------+
+|  Petición POST / Auth|
++----------------------+
+          ↓
++----------------------+
+|  Manipulación Headers|
++----------------------+
+          ↓
++----------------------+
+|  Fuzzing con wordlist|
++----------------------+
+          ↓
++----------------------+
+|  Scripts automatizados|
++----------------------+
