@@ -1,10 +1,10 @@
-# ⚔️ Arsenal de un Analista: Uso Profesional de `curl`
+# Arsenal de un Analista: Uso Profesional de `curl`
 
 Este proyecto técnico recoge el uso avanzado y realista de la herramienta `curl` en escenarios de análisis de vulnerabilidades web. Está orientado a analistas ofensivos, pentesters y profesionales que necesiten operar sin interfaces gráficas, integrando `curl` en sus flujos reales de análisis, automatización o scripting.
 
 ---
 
-## 🎯 Objetivo
+## Objetivo
 
 - Documentar un uso avanzado y eficaz de `curl` en tareas de enumeración, explotación y validación de vulnerabilidades web.
 - Construir una referencia técnica útil para analistas del equipo o para formar parte de un portfolio profesional.
@@ -12,19 +12,19 @@ Este proyecto técnico recoge el uso avanzado y realista de la herramienta `curl
 
 ---
 
-## 🧠 ¿Por qué `curl`?
+## ¿Por qué `curl`?
 
 `curl` es una herramienta crítica en análisis web, auditorías API y entornos donde no se puede depender de interfaces gráficas (Burp, Zap). Su versatilidad permite realizar desde pruebas de XSS o IDOR, hasta autenticaciones complejas, envío de cabeceras personalizadas, bypass de filtros o scripting automatizado.
 
 Ventajas:
-- ✅ Rápido, versátil y sin dependencias
-- ✅ Ideal para scripting y automatización
-- ✅ Funciona en entornos headless / remotos
-- ✅ Permite total control de los headers, métodos, encoding y cuerpo
+- Rápido, versátil y sin dependencias
+- Ideal para scripting y automatización
+- Funciona en entornos headless / remotos
+- Permite total control de los headers, métodos, encoding y cuerpo
 
 ---
 
-## 🧰 Herramientas incluidas
+## Herramientas incluidas
 
 | Categoría           | Funcionalidad                         |
 |---------------------|----------------------------------------|
@@ -38,7 +38,7 @@ Ventajas:
 
 ---
 
-## 📚 Contenido de este repositorio
+## Contenido de este repositorio
 
 - [`cheatsheets/curl-cheatsheet-avanzado.md`](cheatsheets/curl-cheatsheet-avanzado.md):  
   Comandos reales, explicaciones, flags avanzados.
@@ -54,7 +54,7 @@ Ventajas:
 
 ---
 
-## 🔁 Diagrama de flujo profesional
+## Diagrama de flujo profesional
 
 ```plaintext
 +----------------------+
