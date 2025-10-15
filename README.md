@@ -54,29 +54,9 @@ Ventajas:
 
 ---
 
-## Diagrama de flujo profesional
+## Flujo de análisis profesional con `curl`
 
-```plaintext
-+----------------------+
-|  Recolección inicial |
-+----------------------+
-          ↓
-+----------------------+
-|  Petición GET simple |
-+----------------------+
-          ↓
-+----------------------+
-|  Petición POST / Auth|
-+----------------------+
-          ↓
-+----------------------+
-|  Manipulación Headers|
-+----------------------+
-          ↓
-+----------------------+
-|  Fuzzing con wordlist|
-+----------------------+
-          ↓
-+----------------------+
-|  Automatización Bash |
-+----------------------+
+![Flujo de análisis con curl](img/flujo-analisis-curl.png)
+
+> Diagrama vertical/horizontal (según tu exportación) que muestra el pipeline de un análisis con `curl`: recolección, peticiones iniciales, enumeración HTTP, login y sesión, manipulación de cookies, pruebas LFI/SSRF, enumeración de servicios internos y reporte final.
+
