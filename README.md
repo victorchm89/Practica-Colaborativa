@@ -49,8 +49,6 @@ Ventajas:
 - `img/`:  
   Evidencias gráficas de explotación real.
 
-- `flujo/`:  
-  Diagrama de flujo de cómo integrar `curl` en una metodología ofensiva.
 
 ---
 
@@ -58,5 +56,5 @@ Ventajas:
 
 ![Flujo de análisis con curl](ejemplos/img/flujo-analisis-curl.png)
 
-> Diagrama vertical/horizontal (según tu exportación) que muestra el pipeline de un análisis con `curl`: recolección, peticiones iniciales, enumeración HTTP, login y sesión, manipulación de cookies, pruebas LFI/SSRF, enumeración de servicios internos y reporte final.
+> Diagrama horizontal que muestra el pipeline de un análisis con `curl`: recolección, peticiones iniciales, enumeración HTTP, login y sesión, manipulación de cookies, pruebas LFI/SSRF, enumeración de servicios internos y reporte final.
 
