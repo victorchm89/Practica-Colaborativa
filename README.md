@@ -23,7 +23,35 @@ Ventajas:
 - Permite total control de los headers, métodos, encoding y cuerpo
 
 ---
+## Comparativa con otras herramientas
 
+| Herramienta | Uso recomendado | Comentario |
+|-------------|------------------|-----------|
+| **curl**    | Scripting, automatización, pruebas rápidas | Ideal para pipelines y entornos headless |
+| **Burp Suite** | Auditoría manual y explotación con proxy | Mejor para trabajo interactivo y repeater/intruder |
+| **OWASP ZAP** | Escaneo automatizado y hooking | Buena alternativa OSS para pruebas automáticas |
+| **httpie**  | CLI más legible para humanos | Útil para debugging humano, menos scriptable en pipelines complejos |
+
+**Recomendación práctica:** Usar `curl` para **automación y PoC reproducible**, y Burp/ZAP para **auditoría interactiva y análisis profundo**.
+
+---
+
+## Limitaciones y contra-medidas
+
+### Limitaciones de `curl`
+- No es un proxy-interceptador: no dispone de Repeater/Intruder visuales.
+- Requiere parsing manual de respuestas (usar `jq`, `grep`, `sed`).
+- No detecta automáticamente patrones complejos (usar Nuclei, Burp, Dalfox).
+
+### Recomendaciones de mitigación (para aplicaciones probadas)
+- Validar y sanear input en servidor (evitar LFI/SSRF).  
+- Implementar lista blanca en endpoints que consumen URLs externas.  
+- Establecer flags `HttpOnly`, `Secure` y `SameSite` en cookies.  
+- Habilitar CSP, X-Frame-Options y X-Content-Type-Options.  
+- Registrar y monitorizar peticiones a endpoints sensibles (alertas por patrones sospechosos).
+
+---
+  
 ## Herramientas incluidas
 
 | Categoría           | Funcionalidad                         |
@@ -48,7 +76,6 @@ Ventajas:
 
 - `img/`:  
   Evidencias gráficas de explotación real.
-
 
 ---
 
