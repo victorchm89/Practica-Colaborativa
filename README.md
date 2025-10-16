@@ -85,3 +85,11 @@ Ventajas:
 
 > Diagrama horizontal que muestra el pipeline de un análisis con `curl`: recolección, peticiones iniciales, enumeración HTTP, login y sesión, manipulación de cookies, pruebas LFI/SSRF, enumeración de servicios internos y reporte final.
 
+---
+
+## Conclusiones y recomendaciones
+
+- `curl` es una herramienta esencial dentro del arsenal de un analista: **potente, scriptable y reproducible**.  
+- En los casos prácticos del laboratorio se demostró su utilidad para **identificar LFI, SSRF, problemas de sesión y exposición de servicios internos**.  
+- Para un análisis completo, combinar **curl (PoC / scripting)** con **Burp Suite / Nuclei / wfuzz** proporciona la mejor relación cobertura/eficiencia.
+
