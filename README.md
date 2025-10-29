@@ -43,50 +43,55 @@ sudo apt install -y afl++
 # Ghidra: instalar (Java 17+); añadir ejecutable a PATH.
 
 Si compilas 32-bit en 64-bit: sudo apt install gcc-multilib.
+```
+---
 
-2) Compilar binarios de laboratorio
+## 2) Compilar binarios de laboratorio
+```
 cd lab && make
 file bins/bof bins/fmt bins/int
 checksec --file=./bins/bof
 checksec --file=./bins/fmt
 checksec --file=./bins/int
-
+```
 
 Resultado esperado (texto, sin evidencias): se generan bof, fmt, int en lab/bins/, con mitigaciones relajadas al compilar bof y fmt.
 
-3) Flujo de trabajo estático en Ghidra (resumen)
+---
 
-Proyecto Non-Shared → importar lab/bins/bof, fmt, int.
+## 3) Flujo de trabajo estático en Ghidra (resumen)
 
-Activar: Decompiler, String References, Stack Variable Analyzer, Function ID.
+1. Proyecto Non-Shared → importar ```lab/bins/bof```, ```fmt```, ```int```.
+2. Activar: Decompiler, String References, Stack Variable Analyzer, Function ID.
+3. Explorar secciones ```.text/.plt/.got/.rodata``` y funciones ```main```, ```vuln```, ```win```.
+4. Decompilar y anotar sinks (```scanf/strcpy/memcpy/printf```).
+5. XREFs y Strings → localizar rutas y mensajes clave.
+6. Ajustar prototipos si es necesario; patch de instrucciones (opcional, para validar hipótesis).
 
-Explorar secciones .text/.plt/.got/.rodata y funciones main, vuln, win.
+---
 
-Decompilar y anotar sinks (scanf/strcpy/memcpy/printf).
-
-XREFs y Strings → localizar rutas y mensajes clave.
-
-Ajustar prototipos si es necesario; patch de instrucciones (opcional, para validar hipótesis).
-
-4) Dinámico + explotación teórica (sin evidencias)
-BOF (lab/bins/bof)
+## 4) Dinámico + explotación teórica (sin evidencias)
+BOF (```lab/bins/bof```)
 1) gdb/pwndbg: `pattern create 200`; ejecutar y enviar patrón.
 2) Crash → `pattern find $rsp` → offset.
 3) Dirección de `win()` (símbolo/Ghidra).
 4) Ajustar `scripts/exploit/bof_exploit.py` con `offset` + `win`.
 **Resultado esperado:** salto a `win()`.
 
-Format String (lab/bins/fmt)
+Format String (```lab/bins/fmt```)
 1) Enviar `%p %p %p %p` para leaks teóricos.
 2) Identificar índice del argumento controlado; considerar `%n` si procede.
 **Resultado esperado:** leak de direcciones y/o escritura controlada (si RELRO lo permite).
 
-Integer Overflow (lab/bins/int)
+Integer Overflow (```lab/bins/int```)
 1) Probar `./int -1` y `./int 2147483648`.
 2) Explicar efecto de signo/cast en `malloc/memset` con Ghidra.
 **Resultado esperado:** comportamiento indefinido/crash por tamaño inválido.
 
-5) Fuzzing opcional con AFL++
+---
+
+## 5) Fuzzing opcional con AFL++
+```
 cd lab
 make clean
 CC=afl-cc CFLAGS='-O0 -g' make bof fmt int
@@ -94,11 +99,13 @@ CC=afl-cc CFLAGS='-O0 -g' make bof fmt int
 mkdir -p afl_inputs afl_outputs
 echo "AAAA" > afl_inputs/in.txt
 afl-fuzz -i afl_inputs -o afl_outputs -- ./bins/fmt
-
+```
 
 Resultado esperado: nuevas entradas/crashes en afl_outputs/ (no subir evidencias).
 
-6) Recursos
+---
+
+## 6) Recursos
 
 Cheatsheet: docs/cheatsheet_ghidra.md
 
@@ -111,6 +118,8 @@ Casos prácticos: docs/ejemplos.md
 Checklist: docs/checklist.md
 
 Plantilla informe: docs/report_template.md
+
+---
 
 7) Licencia y aviso legal
 
