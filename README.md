@@ -121,6 +121,6 @@ Plantilla informe: docs/report_template.md
 
 ---
 
-7) Licencia y aviso legal
+## 7) Licencia y aviso legal
 
 Licencia MIT (ver LICENSE).
