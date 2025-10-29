@@ -1,4 +1,4 @@
-# Flujo de trabajo profesional (binarios ELF) — SIN EVIDENCIAS
+# Flujo de trabajo profesional (binarios ELF) 
 
 ## 1) Preparación
 - Compilar: `cd lab && make`.
