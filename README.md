@@ -1,95 +1,117 @@
-# Arsenal de un Analista: Uso Profesional de `curl`
+# Guía práctica avanzada: análisis de vulnerabilidades en binarios con **Ghidra** 
 
-Este proyecto técnico recoge el uso avanzado y realista de la herramienta `curl` en escenarios de análisis de vulnerabilidades web. Está orientado a analistas ofensivos, pentesters y profesionales que necesiten operar sin interfaces gráficas, integrando `curl` en sus flujos reales de análisis, automatización o scripting.
-
----
-
-## Objetivo
-
-- Documentar un uso avanzado y eficaz de `curl` en tareas de enumeración, explotación y validación de vulnerabilidades web.
-- Construir una referencia técnica útil para analistas del equipo o para formar parte de un portfolio profesional.
-- Integrar ejemplos reales con capturas, comandos usados, casos explotados y resultados observables.
+> **Objetivo:** Guiar a alguien sin experiencia previa en Ghidra para auditar binarios ELF (Linux) y diseñar PoCs **sin** subir evidencias reales. Documenta **pasos**, **comandos** y **scripts**, y añade el **resultado esperado** en texto.
 
 ---
 
-## ¿Por qué `curl`?
+## Estructura del repositorio (navegación rápida)
 
-`curl` es una herramienta crítica en análisis web, auditorías API y entornos donde no se puede depender de interfaces gráficas (Burp, Zap). Su versatilidad permite realizar desde pruebas de XSS o IDOR, hasta autenticaciones complejas, envío de cabeceras personalizadas, bypass de filtros o scripting automatizado.
-
-Ventajas:
-- Rápido, versátil y sin dependencias
-- Ideal para scripting y automatización
-- Funciona en entornos headless / remotos
-- Permite total control de los headers, métodos, encoding y cuerpo
-
----
-## Comparativa con otras herramientas
-
-| Herramienta | Uso recomendado | Comentario |
-|-------------|------------------|-----------|
-| **curl**    | Scripting, automatización, pruebas rápidas | Ideal para pipelines y entornos headless |
-| **Burp Suite** | Auditoría manual y explotación con proxy | Mejor para trabajo interactivo y repeater/intruder |
-| **OWASP ZAP** | Escaneo automatizado y hooking | Buena alternativa OSS para pruebas automáticas |
-| **httpie**  | CLI más legible para humanos | Útil para debugging humano, menos scriptable en pipelines complejos |
-
-**Recomendación práctica:** Usar `curl` para **automación y PoC reproducible**, y Burp/ZAP para **auditoría interactiva y análisis profundo**.
+Archivo | Contenido | Enfoque
+---|---|---
+`README.md` | Introducción, requisitos y visión general | Presentación
+`docs/cheatsheet_ghidra.md` | Atajos/comandos clave de Ghidra/gdb | Referencia rápida
+`docs/flujo_trabajo_binario.md` | Procedimiento end-to-end (estático + dinámico + fuzzing) | Método
+`docs/guia_ghidra_avanzada.md` | Ghidra a fondo: análisis, XREFs, patching, scripting | Guía extendida
+`docs/ejemplos.md` | Casos prácticos: BOF, Format String, Integer Overflow (pasos + resultado esperado) | Prácticas
+`docs/checklist.md` | Lista de verificación profesional (sin evidencias) | Control de calidad
+`docs/report_template.md` | Plantilla de informe de hallazgos (sin evidencias) | Entrega
 
 ---
 
-## Limitaciones y contra-medidas
+## 1) Requisitos y preparación
 
-### Limitaciones de `curl`
-- No es un proxy-interceptador: no dispone de Repeater/Intruder visuales.
-- Requiere parsing manual de respuestas (usar `jq`, `grep`, `sed`).
-- No detecta automáticamente patrones complejos (usar Nuclei, Burp, Dalfox).
+**SO recomendado:** Ubuntu/Debian x86_64
 
-### Recomendaciones de mitigación (para aplicaciones probadas)
-- Validar y sanear input en servidor (evitar LFI/SSRF).  
-- Implementar lista blanca en endpoints que consumen URLs externas.  
-- Establecer flags `HttpOnly`, `Secure` y `SameSite` en cookies.  
-- Habilitar CSP, X-Frame-Options y X-Content-Type-Options.  
-- Registrar y monitorizar peticiones a endpoints sensibles (alertas por patrones sospechosos).
+```bash
+sudo apt update
+sudo apt install -y build-essential python3 python3-venv git gdb \
+                    python3-pip file binutils checksec radare2 ropper
 
----
-  
-## Herramientas incluidas
+# (Opcional) pwndbg
+git clone https://github.com/pwndbg/pwndbg.git
+cd pwndbg && ./setup.sh && cd ..
 
-| Categoría           | Funcionalidad                         |
-|---------------------|----------------------------------------|
-| Curl (core)         | Peticiones GET, POST, PUT, DELETE      |
-| Headers             | Manipulación avanzada de headers       |
-| Cookies             | Autenticación manual, sesiones         |
-| Fuzzing manual      | Bash + wordlists para bruteforce       |
-| Upload              | Envío de ficheros, validación de tipo  |
-| Debug               | Ver respuesta completa y headers       |
-| Token handling      | JWT, API tokens en Authorization       |
+# Python venv + pwntools
+python3 -m venv venv
+source venv/bin/activate
+pip install --upgrade pip
+pip install pwntools
 
----
+# (Opcional) AFL++
+sudo apt install -y afl++
 
-## Contenido de este repositorio
+# Ghidra: instalar (Java 17+); añadir ejecutable a PATH.
 
-- [`cheatsheets/curl-cheatsheet-avanzado.md`](cheatsheets/curl-cheatsheet-avanzado.md):  
-  Comandos reales, explicaciones, flags avanzados.
+Si compilas 32-bit en 64-bit: sudo apt install gcc-multilib.
 
-- [`ejemplos/casos-practicos-con-curl.md`](ejemplos/casos-practicos-con-curl.md):  
-  Casos de XSS, IDOR, login, uploads inseguros, documentados con capturas y comandos.
+2) Compilar binarios de laboratorio
+cd lab && make
+file bins/bof bins/fmt bins/int
+checksec --file=./bins/bof
+checksec --file=./bins/fmt
+checksec --file=./bins/int
 
-- `img/`:  
-  Evidencias gráficas de explotación real.
 
----
+Resultado esperado (texto, sin evidencias): se generan bof, fmt, int en lab/bins/, con mitigaciones relajadas al compilar bof y fmt.
 
-## Flujo de análisis profesional con `curl`
+3) Flujo de trabajo estático en Ghidra (resumen)
 
-![Flujo de análisis con curl](ejemplos/img/flujo-analisis-curl.png)
+Proyecto Non-Shared → importar lab/bins/bof, fmt, int.
 
-> Diagrama horizontal que muestra el pipeline de un análisis con `curl`: recolección, peticiones iniciales, enumeración HTTP, login y sesión, manipulación de cookies, pruebas LFI/SSRF, enumeración de servicios internos y reporte final.
+Activar: Decompiler, String References, Stack Variable Analyzer, Function ID.
 
----
+Explorar secciones .text/.plt/.got/.rodata y funciones main, vuln, win.
 
-## Conclusiones y recomendaciones
+Decompilar y anotar sinks (scanf/strcpy/memcpy/printf).
 
-- `curl` es una herramienta esencial dentro del arsenal de un analista: **potente, scriptable y reproducible**.  
-- En los casos prácticos del laboratorio se demostró su utilidad para **identificar LFI, SSRF, problemas de sesión y exposición de servicios internos**.  
-- Para un análisis completo, combinar **curl (PoC / scripting)** con **Burp Suite / Nuclei / wfuzz** proporciona la mejor relación cobertura/eficiencia.
+XREFs y Strings → localizar rutas y mensajes clave.
 
+Ajustar prototipos si es necesario; patch de instrucciones (opcional, para validar hipótesis).
+
+4) Dinámico + explotación teórica (sin evidencias)
+BOF (lab/bins/bof)
+1) gdb/pwndbg: `pattern create 200`; ejecutar y enviar patrón.
+2) Crash → `pattern find $rsp` → offset.
+3) Dirección de `win()` (símbolo/Ghidra).
+4) Ajustar `scripts/exploit/bof_exploit.py` con `offset` + `win`.
+**Resultado esperado:** salto a `win()`.
+
+Format String (lab/bins/fmt)
+1) Enviar `%p %p %p %p` para leaks teóricos.
+2) Identificar índice del argumento controlado; considerar `%n` si procede.
+**Resultado esperado:** leak de direcciones y/o escritura controlada (si RELRO lo permite).
+
+Integer Overflow (lab/bins/int)
+1) Probar `./int -1` y `./int 2147483648`.
+2) Explicar efecto de signo/cast en `malloc/memset` con Ghidra.
+**Resultado esperado:** comportamiento indefinido/crash por tamaño inválido.
+
+5) Fuzzing opcional con AFL++
+cd lab
+make clean
+CC=afl-cc CFLAGS='-O0 -g' make bof fmt int
+
+mkdir -p afl_inputs afl_outputs
+echo "AAAA" > afl_inputs/in.txt
+afl-fuzz -i afl_inputs -o afl_outputs -- ./bins/fmt
+
+
+Resultado esperado: nuevas entradas/crashes en afl_outputs/ (no subir evidencias).
+
+6) Recursos
+
+Cheatsheet: docs/cheatsheet_ghidra.md
+
+Flujo completo: docs/flujo_trabajo_binario.md
+
+Guía Ghidra avanzada: docs/guia_ghidra_avanzada.md
+
+Casos prácticos: docs/ejemplos.md
+
+Checklist: docs/checklist.md
+
+Plantilla informe: docs/report_template.md
+
+7) Licencia y aviso legal
+
+Licencia MIT (ver LICENSE).
