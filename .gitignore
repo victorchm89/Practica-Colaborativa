@@ -1,0 +1,23 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Ghidra
+*.rep
+*.lock
+*.gpr
+*.gpj
+*.log
+*.bak
+.ghidra/
+
+# Binarios / builds
+lab/bins/
+*.o
+*.out
+core
+*.core
+
+# AFL
+afl_outputs/
