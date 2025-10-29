@@ -46,3 +46,6 @@ Función, offset/dirección (si aplica), fichero/línea.
 
 ## Recomendaciones generales
 - Compilar con:
+```D_FORTIFY_SOURCE=2 -fstack-protector-strong -fPIE -pie -Wl,-z,relro,-z,now```
+- Sustituir funciones inseguras; límites en `scanf/printf`; usar *sanitizers* en QA.
+
