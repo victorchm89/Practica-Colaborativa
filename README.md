@@ -1,6 +1,6 @@
 # Guía práctica avanzada: análisis de vulnerabilidades en binarios con **Ghidra** 
 
-> **Objetivo:** Guiar a alguien sin experiencia previa en Ghidra para auditar binarios ELF (Linux) y diseñar PoCs **sin** subir evidencias reales. Documenta **pasos**, **comandos** y **scripts**, y añade el **resultado esperado** en texto.
+> **Objetivo:** Guiar a alguien sin experiencia previa en Ghidra para auditar binarios ELF (Linux) y diseñar PoCs. 
 
 ---
 
