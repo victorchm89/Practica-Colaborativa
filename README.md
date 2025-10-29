@@ -55,22 +55,22 @@ checksec --file=./bins/fmt
 checksec --file=./bins/int
 ```
 
-Resultado esperado (texto, sin evidencias): se generan bof, fmt, int en lab/bins/, con mitigaciones relajadas al compilar bof y fmt.
+Resultado esperado: se generan bof, fmt, int en lab/bins/, con mitigaciones relajadas al compilar bof y fmt.
 
 ---
 
-## 3) Flujo de trabajo estático en Ghidra (resumen)
+## 3) Flujo de trabajo estático en Ghidra 
 
 1. Proyecto Non-Shared → importar ```lab/bins/bof```, ```fmt```, ```int```.
 2. Activar: Decompiler, String References, Stack Variable Analyzer, Function ID.
 3. Explorar secciones ```.text/.plt/.got/.rodata``` y funciones ```main```, ```vuln```, ```win```.
 4. Decompilar y anotar sinks (```scanf/strcpy/memcpy/printf```).
 5. XREFs y Strings → localizar rutas y mensajes clave.
-6. Ajustar prototipos si es necesario; patch de instrucciones (opcional, para validar hipótesis).
+6. Ajustar prototipos si es necesario; patch de instrucciones.
 
 ---
 
-## 4) Dinámico + explotación teórica (sin evidencias)
+## 4) Dinámico + explotación teórica 
 BOF (```lab/bins/bof```)
 1) gdb/pwndbg: `pattern create 200`; ejecutar y enviar patrón.
 2) Crash → `pattern find $rsp` → offset.
@@ -81,7 +81,7 @@ BOF (```lab/bins/bof```)
 Format String (```lab/bins/fmt```)
 1) Enviar `%p %p %p %p` para leaks teóricos.
 2) Identificar índice del argumento controlado; considerar `%n` si procede.
-**Resultado esperado:** leak de direcciones y/o escritura controlada (si RELRO lo permite).
+**Resultado esperado:** leak de direcciones y/o escritura controlada.
 
 Integer Overflow (```lab/bins/int```)
 1) Probar `./int -1` y `./int 2147483648`.
@@ -101,7 +101,7 @@ echo "AAAA" > afl_inputs/in.txt
 afl-fuzz -i afl_inputs -o afl_outputs -- ./bins/fmt
 ```
 
-Resultado esperado: nuevas entradas/crashes en afl_outputs/ (no subir evidencias).
+Resultado esperado: nuevas entradas/crashes en afl_outputs/.
 
 ---
 
